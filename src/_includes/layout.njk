@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#15171b" />
+    <link rel="icon" type="image/png" href="/assets/favicon.png" />
+    <link rel="apple-touch-icon" href="/assets/favicon.png" />
+    <meta name="description" content="{{ description | escape }}" />
+    <title>{{ title | escape }} — Amotorg</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <script src="/assets/calculations.js" defer></script>
+    <script src="/assets/dadata-lookup.js" defer></script>
+    <script src="/assets/invoice.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a href="/" class="brand" aria-label="Amotorg — на главную"><img class="brand-logo" src="/assets/logo.png" width="284" height="86" alt="Amotorg" /><small>/ документы</small></a>
+        <span class="header-side"><span class="status-dot" aria-hidden="true"></span> Без регистрации</span>
+      </div>
+    </header>
+    <main>
+      {{ content | safe }}
+    </main>
+    <footer class="site-footer"><div class="shell footer-inner"><span>Amotorg · Деловые документы</span><span>Автозаполнение через DaData · v3.0</span></div></footer>
+    <div class="toast" id="app-toast" role="status" aria-live="polite" hidden></div>
+  </body>
+</html>

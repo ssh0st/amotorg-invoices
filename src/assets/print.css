@@ -1,0 +1,108 @@
+/* Изолированная печатная страница: только содержимое счёта или акта. */
+@page { size: A4; margin: 12mm 13mm; }
+*, *::before, *::after { box-sizing: border-box; }
+html, body { width: 100%; padding: 0; margin: 0; background: #fff; color: #111; font-family: Arial, sans-serif; }
+.print-root { width: 100%; }
+.paper { background: #fff; width: 100%; min-height: 700px; padding: clamp(27px, 3.5vw, 56px); color: #171717; box-shadow: 0 9px 22px rgba(45, 58, 68, .10); border-radius: 2px; font-family: Arial, Helvetica, sans-serif; font-size: 11px; line-height: 1.45; }
+.document { display: none; }
+.document.is-active { display: block; }
+.bank-details-table { width: 100%; border-collapse: collapse; table-layout: fixed; line-height: 1.2; margin-bottom: 30px; }
+.bank-details-table th, .bank-details-table td { border: 1px solid #2e2e2e; vertical-align: top; padding: 7px 9px; overflow-wrap: anywhere; }
+.bank-details-table th { width: 18%; text-align: left; font-size: 10px; font-weight: 500; }
+.bank-details-table td:last-child { width: 31%; }
+.bank-name-cell { width: 51%; }
+.bank-name-cell span, .recipient-cell span { display: block; color: #6c6c6c; font-size: 9px; margin-bottom: 5px; }
+.bank-name-cell strong, .recipient-cell strong { display: block; font-size: 11px; }
+.tax-details-cell span { margin-right: 12px; display: inline-block; }
+.tax-details-cell strong { font-size: 10px; }
+.document-header h1 { font-size: clamp(19px, 2.1vw, 25px); font-weight: 800; letter-spacing: -.6px; line-height: 1.24; margin: 0; }
+.document-header.centered { text-align: center; }
+.document-header.centered h1 { margin-bottom: 8px; }
+.document-header.centered p { margin: 5px 0; font-size: 12px; }
+.document-header .act-reference { font-size: 11px !important; color: #454545; }
+.document-rule { height: 2px; background: #222; margin: 16px 0 21px; }
+.party-list { margin: 0 0 25px; }
+.party-list > div { display: grid; grid-template-columns: 95px 1fr; gap: 7px; margin: 0 0 13px; }
+.party-list dt { font-weight: bold; }
+.party-list dd { margin: 0; overflow-wrap: anywhere; }
+.party-list dd > strong { display: block; }
+.multiline { display: block; white-space: pre-line; margin-top: 3px; font-size: 10px; color: #444; overflow-wrap: anywhere; }
+.multiline.no-margin { margin: 0; }
+.document-table-wrap { width: 100%; overflow-x: auto; }
+.document-table { width: 100%; border-collapse: collapse; font-size: 10px; line-height: 1.3; }
+.document-table th, .document-table td { border: 1px solid #353535; padding: 7px 5px; text-align: left; overflow-wrap: anywhere; }
+.document-table th { text-align: center; background: #f4f4f4; font-weight: bold; }
+.document-table td:nth-child(1) { text-align: center; width: 5%; }
+.document-table td:nth-child(3), .document-table td:nth-child(4), .document-table td:nth-child(5) { text-align: center; }
+.document-table td:nth-last-child(2), .document-table td:last-child { text-align: right; white-space: nowrap; }
+.document-table tbody tr { break-inside: avoid; }
+.invoice-service-table th:nth-child(2) { width: 32%; }
+.document-totals { margin-top: 13px; }
+.document-vat-total { display: flex; justify-content: end; gap: 25px; margin-bottom: 7px; font-size: 10px; }
+.document-grand-total { display: flex; gap: 20px; justify-content: flex-end; align-items: baseline; font-size: 13px; }
+.document-grand-total strong { font-size: 17px; }
+.invoice-summary { margin: 30px 0 4px; font-size: 11px; }
+.amount-words { margin: 0; font-weight: bold; line-height: 1.6; font-size: 11px; }
+.invoice-signature { display: grid; grid-template-columns: 1.35fr 1fr 1.1fr; gap: 14px; margin: 52px 0 25px; }
+.signature-field { display: flex; flex-direction: column; justify-content: flex-end; text-align: center; min-width: 0; }
+.signature-field strong, .signature-field i { display: block; min-height: 24px; border-bottom: 1px solid #333; font-size: 10px; font-style: normal; padding-bottom: 5px; overflow-wrap: anywhere; }
+.signature-field span { font-size: 9px; color: #555; margin-top: 5px; }
+.created-with { border-top: 1px solid #e5e5e5; margin-top: 38px; padding-top: 8px; text-align: center; color: #a1a1a1; font-size: 9px; }
+.act-intro { margin: 0 0 23px; line-height: 1.8; }
+.act-vat-note { text-align: right; color: #444; font-size: 10px; }
+.act-result { line-height: 1.8; margin: 32px 0 35px; }
+.act-parties { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.act-parties section { min-width: 0; overflow-wrap: anywhere; }
+.act-parties h2 { font-size: 12px; border-bottom: 1px solid #999; padding-bottom: 8px; margin-bottom: 10px; }
+.act-parties section > strong { display: block; font-size: 11px; }
+.signature-line { display: flex; gap: 6px; align-items: end; margin-top: 30px; font-size: 9px; }
+.signature-line i { display: inline-block; min-width: 30px; flex: 1; height: 15px; border-bottom: 1px solid #222; }
+
+/* В отдельном iframe нет HTML редактора, шапки, навигации и футера. */
+.paper, .paper.is-active { display: block !important; width: 100%; max-width: none; height: auto; min-height: 0; padding: 0; margin: 0; border: none; box-shadow: none; border-radius: 0; font-size: 10pt; }
+.document-header h1 { font-size: 19pt; }
+.document-table { font-size: 8.25pt; }
+.document-table-wrap { overflow: visible !important; }
+.bank-details-table { margin-bottom: 20pt; }
+.invoice-signature { margin-top: 25pt; }
+.party-list > div { grid-template-columns: 92px 1fr; }
+.created-with { display: none !important; }
+[hidden] { display: none !important; }
+.document-table thead { display: table-header-group; }
+.document-table tr, .bank-details-table, .act-parties, .invoice-signature, .signature-line { break-inside: avoid; page-break-inside: avoid; }
+.document-totals, .invoice-summary, .amount-words { break-inside: avoid; }
+@media print {
+  html, body { margin: 0 !important; padding: 0 !important; }
+  .paper { min-height: 0 !important; }
+  *, *::before, *::after { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* v3: стабильный отдельный блок должности, линии подписи и расшифровки */
+.act-party { display: flex; flex-direction: column; min-width: 0; }
+.act-party .multiline { flex: 0 0 auto; }
+.party-signature-block {
+  margin-top: auto;
+  padding-top: 22pt;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  gap: 10pt;
+  font-size: 9pt;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+.party-signature-position { min-height: 15pt; font-weight: 600; line-height: 1.35; }
+.party-signature-mark { display: grid; grid-template-columns: auto minmax(26pt, 1fr); align-items: end; gap: 8pt; color: #555; font-size: 8pt; }
+.party-signature-mark i { display: block; height: 15pt; border-bottom: 1px solid #333; min-width: 0; }
+.party-signature-name { min-height: 20pt; border-bottom: 1px solid #888; padding-bottom: 3pt; line-height: 1.4; }
+.act-comment { font-size: 9pt; line-height: 1.5; margin: 0 0 16pt; overflow-wrap: anywhere; }
+.act-comment .multiline { display: inline; }
+.act-parties { gap: 16pt; align-items: stretch; }
+.act-party { break-inside: avoid; page-break-inside: avoid; }
+@media print {
+  .paper { font-size: 10pt; }
+  .act-party { break-inside: avoid; page-break-inside: avoid; }
+  .act-parties { break-inside: avoid; page-break-inside: avoid; }
+}

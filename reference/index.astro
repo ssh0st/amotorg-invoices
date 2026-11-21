@@ -1,0 +1,162 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout>
+  <section class="shell hero">
+    <div class="hero-copy">
+      <span class="eyebrow"><span class="eyebrow-dot"></span> ДЕЛОВЫЕ ДОКУМЕНТЫ</span>
+      <h1>Счёт и акт.<br /><em>Строго и по делу.</em></h1>
+      <p>Заполните банковские реквизиты, стороны и услуги один раз. Счёт и связанный с ним акт формируются прямо в браузере.</p>
+    </div>
+    <div class="hero-stats"><strong>01</strong><span>Заполнить</span><b>→</b><strong>02</strong><span>Проверить</span><b>→</b><strong>03</strong><span>Сохранить</span></div>
+  </section>
+
+  <div class="shell builder" id="invoice-app">
+    <section class="editor-column" aria-label="Редактор документов">
+      <div class="editor-head">
+        <div><span class="section-kicker">РЕДАКТОР</span><h2>Данные документов</h2></div>
+        <button type="button" id="reset-btn" class="text-button">Очистить</button>
+      </div>
+
+      <form id="invoice-form" autocomplete="off" data-company-lookup-url="/company/lookup">
+        <div class="form-card">
+          <div class="card-title"><span class="step">01</span><div><h3>Счёт и акт</h3><p>Номера, даты и валюта</p></div></div>
+          <div class="fields two">
+            <label>Номер счёта<input name="invoiceNo" maxlength="60" value="1" required /></label>
+            <label>Дата счёта<input name="issueDate" type="date" required /></label>
+            <label>Номер акта<input name="actNo" maxlength="60" value="1" required /></label>
+            <label>Дата акта<input name="actDate" type="date" required /></label>
+            <label class="span-two">Валюта<select name="currency"><option value="RUB">₽ — RUB</option><option value="EUR">€ — EUR</option><option value="USD">$ — USD</option><option value="GBP">£ — GBP</option><option value="KZT">₸ — KZT</option></select></label>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <div class="card-title"><span class="step">02</span><div><h3>Банковские реквизиты</h3><p>Шапка счёта</p></div></div>
+          <div class="fields two">
+            <label class="span-two">Банк получателя<input name="bankName" maxlength="250" placeholder="Наименование банка" required /></label>
+            <label>БИК<input name="bik" maxlength="20" placeholder="000000000" required /></label>
+            <label>Корреспондентский счёт<input name="correspondentAccount" maxlength="34" placeholder="Сч. №" required /></label>
+            <label class="span-two">Расчётный счёт<input name="settlementAccount" maxlength="34" placeholder="Сч. №" required /></label>
+            <div class="field-group"><label for="tax-id">ИНН исполнителя</label><div class="lookup-control"><input id="tax-id" name="taxId" inputmode="numeric" maxlength="12" required /><button type="button" class="lookup-button" id="lookup-seller">Заполнить по ИНН</button></div><span class="lookup-status" id="seller-lookup-status" aria-live="polite"></span></div>
+            <label>КПП<input name="kpp" maxlength="20" placeholder="Необязательно" /></label>
+            <label class="span-two">Получатель<input name="recipient" maxlength="250" placeholder="Организация или ИП" required /></label>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <div class="card-title"><span class="step">03</span><div><h3>Стороны</h3><p>Исполнитель, заказчик и комментарий</p></div></div>
+          <div class="fields">
+            <label>Исполнитель<input name="seller" placeholder="ООО «Пример» или ФИО" maxlength="150" required /></label>
+            <label>Реквизиты исполнителя<textarea name="sellerInfo" rows="3" maxlength="1200" placeholder="Адрес, телефон и дополнительные сведения"></textarea></label>
+            <div class="field-group"><label for="buyer-tax-id">ИНН заказчика</label><div class="lookup-control"><input id="buyer-tax-id" name="buyerTaxId" inputmode="numeric" maxlength="12" /><button type="button" class="lookup-button" id="lookup-buyer">Заполнить по ИНН</button></div><span class="lookup-status" id="buyer-lookup-status" aria-live="polite"></span></div>
+            <label>Заказчик<input name="buyer" maxlength="150" placeholder="Название компании или ФИО" required /></label>
+            <label>Реквизиты заказчика<textarea name="buyerInfo" rows="3" maxlength="1000" placeholder="ИНН, КПП, адрес, телефон"></textarea></label>
+            <label>Комментарий<textarea name="comment" rows="3" maxlength="1200" placeholder="Показывается в теле счёта, если заполнен"></textarea></label>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <div class="card-title"><span class="step">04</span><div><h3>Услуги</h3><p>Позиции попадут и в счёт, и в акт</p></div></div>
+          <div id="line-items" class="line-items"></div>
+          <button type="button" class="outline-button" id="add-row">＋ Добавить услугу</button>
+        </div>
+
+        <div class="form-card">
+          <div class="card-title"><span class="step">05</span><div><h3>Подпись</h3><p>Должность и расшифровка</p></div></div>
+          <div class="fields two">
+            <label>Должность<input name="position" maxlength="100" placeholder="Например: Генеральный директор" required /></label>
+            <label>Расшифровка подписи<input name="signatureName" maxlength="150" placeholder="Фамилия И.О." required /></label>
+          </div>
+        </div>
+      </form>
+
+      <div class="privacy-note"><span>✓</span><div><strong>Данные остаются под вашим контролем.</strong><p>При нажатии «Заполнить по ИНН» сервису DaData передаётся только ИНН. Остальные данные формы не отправляются.</p></div></div>
+    </section>
+
+    <section class="preview-column" aria-label="Предпросмотр документа">
+      <div class="preview-heading">
+        <div><span class="section-kicker">ПРЕДПРОСМОТР</span><h2>Готовый документ</h2></div>
+        <div class="document-tabs" role="tablist" aria-label="Тип документа">
+          <button type="button" class="document-tab is-active" data-document-target="invoice" role="tab" aria-selected="true">Счёт</button>
+          <button type="button" class="document-tab" data-document-target="act" role="tab" aria-selected="false">Акт</button>
+        </div>
+      </div>
+
+      <div class="preview-surface">
+        <article class="paper document is-active" id="invoice-document" data-document="invoice">
+          <table class="bank-details-table" aria-label="Банковские реквизиты получателя">
+            <tbody>
+              <tr>
+                <td class="bank-name-cell" rowspan="2"><span>Банк получателя</span><strong id="p-bank-name">—</strong></td>
+                <th>БИК</th><td id="p-bank-bik">—</td>
+              </tr>
+              <tr><th>Сч. №</th><td id="p-bank-correspondent">—</td></tr>
+              <tr>
+                <td class="tax-details-cell"><span>ИНН <strong id="p-bank-tax-id">—</strong></span><span>КПП <strong id="p-bank-kpp">—</strong></span></td>
+                <th rowspan="2">Сч. №</th><td rowspan="2" id="p-bank-settlement">—</td>
+              </tr>
+              <tr><td class="recipient-cell"><span>Получатель</span><strong id="p-bank-recipient">—</strong></td></tr>
+            </tbody>
+          </table>
+
+          <header class="document-header invoice-heading">
+            <h1>Счёт на оплату № <span id="p-invoice-no">1</span> от <span id="p-invoice-date"></span></h1>
+          </header>
+
+          <div class="document-rule"></div>
+
+          <dl class="party-list">
+            <div><dt>Исполнитель:</dt><dd><strong id="p-invoice-seller">Исполнитель</strong><span class="multiline" id="p-invoice-seller-info"></span></dd></div>
+            <div><dt>Заказчик:</dt><dd><strong id="p-invoice-buyer">Заказчик</strong><span class="multiline" id="p-invoice-buyer-info"></span></dd></div>
+            <div id="p-invoice-comment-box" hidden><dt>Комментарий:</dt><dd><span class="multiline no-margin" id="p-invoice-comment"></span></dd></div>
+          </dl>
+
+          <div class="document-table-wrap"><table class="document-table invoice-service-table"><thead><tr><th>№</th><th>Наименование услуги</th><th>Кол-во</th><th>Ед. изм.</th><th>НДС</th><th>Цена</th><th>Сумма</th></tr></thead><tbody id="p-invoice-lines"></tbody></table></div>
+
+          <div class="document-totals"><div class="document-grand-total"><span>Итого:</span><strong id="p-invoice-total"></strong></div></div>
+
+          <p class="invoice-summary">Всего наименований <strong id="p-invoice-count">1</strong>, на сумму <strong id="p-invoice-total-text"></strong></p>
+          <p class="amount-words" id="p-invoice-amount-words"></p>
+
+          <div class="invoice-signature">
+            <div class="signature-field"><strong id="p-invoice-position">Должность</strong><span>должность</span></div>
+            <div class="signature-field"><i></i><span>подпись</span></div>
+            <div class="signature-field"><strong id="p-invoice-signature-name">Расшифровка подписи</strong><span>расшифровка подписи</span></div>
+          </div>
+
+          <div class="created-with">Создано при помощи Amotorgh</div>
+        </article>
+
+        <article class="paper document" id="act-document" data-document="act">
+          <header class="document-header centered">
+            <h1>Акт выполненных работ</h1>
+            <p>№ <strong id="p-act-no">1</strong> от <strong id="p-act-date"></strong></p>
+            <p class="act-reference">к счёту № <strong id="p-act-invoice-no">1</strong> от <strong id="p-act-invoice-date"></strong></p>
+          </header>
+
+          <div class="document-rule"></div>
+
+          <p class="act-intro">Исполнитель: <strong id="p-act-seller-intro">Исполнитель</strong>. Заказчик: <strong id="p-act-buyer-intro">Заказчик</strong>. Стороны составили настоящий акт о нижеследующем:</p>
+
+          <div class="document-table-wrap"><table class="document-table act-service-table"><thead><tr><th>№</th><th>Наименование работ (услуг)</th><th>Кол-во</th><th>Ед. изм.</th><th>Цена</th><th>Сумма</th></tr></thead><tbody id="p-act-lines"></tbody></table></div>
+
+          <div class="document-totals"><div class="document-grand-total"><span>Всего:</span><strong id="p-act-total"></strong></div></div>
+
+          <p class="act-result">Работы (услуги) выполнены полностью и в установленный срок. Стороны претензий друг к другу не имеют.</p>
+
+          <div class="act-parties">
+            <section><h2>Исполнитель</h2><strong id="p-act-seller">Исполнитель</strong><span class="multiline" id="p-act-seller-info"></span><div class="signature-line"><span id="p-act-position">Должность</span><i></i><span id="p-act-signature-name">Фамилия И.О.</span></div></section>
+            <section><h2>Заказчик</h2><strong id="p-act-buyer">Заказчик</strong><span class="multiline" id="p-act-buyer-info"></span><div class="signature-line">Подпись <i></i></div></section>
+          </div>
+
+          <div class="created-with">Создано при помощи Amotorgh</div>
+        </article>
+      </div>
+
+      <div class="download-actions"><button type="button" id="download-pdf" class="download-button"><span>↓</span> <b id="download-label">Сохранить счёт в PDF</b></button><p>В окне печати выберите «Сохранить как PDF».</p></div>
+    </section>
+  </div>
+
+  <script src="/assets/invoice.js" is:inline defer></script>
+</BaseLayout>
